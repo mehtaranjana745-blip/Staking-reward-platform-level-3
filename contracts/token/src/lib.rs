@@ -15,6 +15,8 @@ pub struct TokenContract;
 
 #[contractimpl]
 impl TokenContract {
+    /// Initializes the token contract with administrative authority and token details.
+    /// Panics if the contract has already been initialized.
     pub fn initialize(env: Env, admin: Address, name: String, symbol: String) {
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized")
@@ -24,6 +26,8 @@ impl TokenContract {
         env.storage().instance().set(&DataKey::Symbol, &symbol);
     }
 
+    /// Mints a specified amount of tokens to a target address.
+    /// Only the authorized admin address is permitted to call this operation.
     pub fn mint(env: Env, to: Address, amount: i128) {
         let admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
         admin.require_auth();
