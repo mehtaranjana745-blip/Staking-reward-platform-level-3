@@ -2,6 +2,9 @@
 name = "staking"
 version = "0.1.0"
 edition = "2021"
+authors = ["mehtaranjana745-blip <mehtaranjana745@gmail.com>"]
+description = "Staking contract for the Soroban reward platform"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib", "rlib"]

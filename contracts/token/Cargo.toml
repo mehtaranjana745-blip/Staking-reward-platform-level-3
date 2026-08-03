@@ -2,6 +2,9 @@
 name = "token"
 version = "0.1.0"
 edition = "2021"
+authors = ["mehtaranjana745-blip <mehtaranjana745@gmail.com>"]
+description = "Reward token contract for the Soroban staking platform"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
