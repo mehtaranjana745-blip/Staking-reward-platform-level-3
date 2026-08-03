@@ -3,6 +3,10 @@ use soroban_sdk::{contract, contractimpl, contracttype, Address, Env, IntoVal};
 
 
 
+/// DataKey represents storage keys used to store contract data.
+/// - `RewardToken` stores the Address of the reward token contract (instance storage).
+/// - `StakingToken` stores the Address of the staking token contract (instance storage).
+/// - `Stake(Address)` stores a `StakeInfo` struct for the user (persistent storage).
 #[contracttype]
 #[derive(Clone)]
 pub enum DataKey {
@@ -23,6 +27,8 @@ pub struct StakingContract;
 
 #[contractimpl]
 impl StakingContract {
+    /// Initializes the staking contract with the reward token and staking token addresses.
+    /// Ensures that initialization can only happen once using an instance storage check.
     pub fn initialize(env: Env, reward_token: Address, staking_token: Address) {
         if env.storage().instance().has(&DataKey::RewardToken) {
             panic!("already initialized")
