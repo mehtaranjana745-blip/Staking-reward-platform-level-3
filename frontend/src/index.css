@@ -10,6 +10,8 @@
   --text-muted: #94a3b8;
   --accent: #3b82f6;
   --accent-glow: rgba(59, 130, 246, 0.4);
+  --error: #f87171;
+  --pending: #fbbf24;
 }
 
 * {
@@ -281,7 +283,7 @@ body {
 }
 
 .status-toast.error {
-  border-left: 4px solid #f87171;
+  border-left: 4px solid var(--error);
 }
 
 .status-toast.success {
@@ -289,7 +291,7 @@ body {
 }
 
 .status-toast.pending {
-  border-left: 4px solid #fbbf24;
+  border-left: 4px solid var(--pending);
 }
 
 @keyframes slideUp {
