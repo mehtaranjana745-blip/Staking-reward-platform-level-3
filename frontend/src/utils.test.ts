@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { validateAmount, formatAddress, calculateMockRewards, isValidContractId } from './utils';
+import { validateAmount, formatAddress, calculateMockRewards, isValidContractId, toStroops, fromStroops } from './utils';
 
 describe('Utility Functions Tests', () => {
   test('validateAmount validates positive numbers correctly', () => {
@@ -21,5 +21,17 @@ describe('Utility Functions Tests', () => {
   test('isValidContractId checks contract ID structure', () => {
     expect(isValidContractId('CADERYULZE76K23VX36Y4ZK53O7E6I2AE6MXHLNMSQ5XCEVX3DJPFWN2')).toBe(true);
     expect(isValidContractId('invalid_id')).toBe(false);
+  });
+
+  test('toStroops converts normal value to stroops correctly', () => {
+    expect(toStroops(10)).toBe('100000000');
+    expect(toStroops('1.5')).toBe('15000000');
+    expect(toStroops('abc')).toBe('0');
+  });
+
+  test('fromStroops converts stroops to normal decimal string correctly', () => {
+    expect(fromStroops(10000000)).toBe('1.0000');
+    expect(fromStroops('15000000')).toBe('1.5000');
+    expect(fromStroops('abc')).toBe('0.0000');
   });
 });
