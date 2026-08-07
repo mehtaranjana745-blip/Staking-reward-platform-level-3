@@ -16,3 +16,15 @@ export function calculateMockRewards(staked: number, seconds: number): number {
 export function isValidContractId(id: string): boolean {
   return typeof id === 'string' && id.length === 56 && id.startsWith('C');
 }
+
+export function toStroops(val: number | string): string {
+  const num = Number(val);
+  if (isNaN(num)) return '0';
+  return (num * 10000000).toFixed(0);
+}
+
+export function fromStroops(val: number | string): string {
+  const num = Number(val);
+  if (isNaN(num)) return '0.0000';
+  return (num / 10000000).toFixed(4);
+}
