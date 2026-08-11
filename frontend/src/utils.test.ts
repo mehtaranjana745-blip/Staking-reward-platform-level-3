@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { validateAmount, formatAddress, calculateMockRewards, isValidContractId, toStroops, fromStroops } from './utils';
+import { validateAmount, formatAddress, calculateMockRewards, isValidContractId, toStroops, fromStroops, parseTransactionError } from './utils';
 
 describe('Utility Functions Tests', () => {
   test('validateAmount validates positive numbers correctly', () => {
@@ -33,5 +33,13 @@ describe('Utility Functions Tests', () => {
     expect(fromStroops(10000000)).toBe('1.0000');
     expect(fromStroops('15000000')).toBe('1.5000');
     expect(fromStroops('abc')).toBe('0.0000');
+  });
+
+  test('parseTransactionError handles various error shapes', () => {
+    expect(parseTransactionError(null)).toBe('Unknown error occurred');
+    expect(parseTransactionError('User rejected the transaction')).toBe('Transaction rejected by user');
+    expect(parseTransactionError({ message: 'insufficient funds or balance' })).toBe('Insufficient balance for this transaction');
+    expect(parseTransactionError(new Error('timeout occurred'))).toBe('Network transaction timed out. Please try again.');
+    expect(parseTransactionError('some random error')).toBe('some random error');
   });
 });
