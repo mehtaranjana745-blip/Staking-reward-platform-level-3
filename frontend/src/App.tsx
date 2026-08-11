@@ -153,6 +153,14 @@ export default function App() {
     }
   };
 
+  const disconnectWallet = () => {
+    setAddress(null);
+    setStakedAmount('0');
+    setPendingRewards('0');
+    setTokenBalance('0');
+    setStatus({type: 'success', msg: 'Disconnected successfully'});
+  };
+
   useEffect(() => {
     if (address) {
       fetchContractData(address);
@@ -301,10 +309,15 @@ export default function App() {
         </div>
         
         {address ? (
-          <div className="btn" style={{ border: '1px solid var(--primary)', color: 'var(--primary)' }}>
+          <button 
+            className="btn" 
+            style={{ border: '1px solid var(--primary)', color: 'var(--primary)', cursor: 'pointer' }}
+            onClick={disconnectWallet}
+            title="Click to disconnect wallet"
+          >
             <ShieldCheck size={18} />
-            {address.slice(0, 4)}...{address.slice(-4)}
-          </div>
+            {address.slice(0, 4)}...{address.slice(-4)} (Disconnect)
+          </button>
         ) : (
           <button className="btn btn-primary" onClick={connectWallet}>
             Connect Wallet
