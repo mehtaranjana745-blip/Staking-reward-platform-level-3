@@ -28,3 +28,18 @@ export function fromStroops(val: number | string): string {
   if (isNaN(num)) return '0.0000';
   return (num / 10000000).toFixed(4);
 }
+
+export function parseTransactionError(err: any): string {
+  if (!err) return 'Unknown error occurred';
+  const msg = typeof err === 'string' ? err : err.message || '';
+  if (msg.includes('User reject') || msg.includes('reject') || msg.includes('declined')) {
+    return 'Transaction rejected by user';
+  }
+  if (msg.includes('insufficient') || msg.includes('balance')) {
+    return 'Insufficient balance for this transaction';
+  }
+  if (msg.includes('timeout')) {
+    return 'Network transaction timed out. Please try again.';
+  }
+  return msg || 'Transaction failed';
+}
