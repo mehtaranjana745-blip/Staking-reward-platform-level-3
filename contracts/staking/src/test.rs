@@ -121,4 +121,27 @@ fn test_get_stake() {
     assert_eq!(staking_client.get_stake(&user), 350);
 }
 
+#[test]
+fn test_restake_claims_existing_rewards() {
+    let env = Env::default();
+    let (user, reward_token_client, staking_token_client, _, staking_client) = setup(&env);
+    
+    env.ledger().with_mut(|l| l.timestamp = 1000);
+    staking_client.stake(&user, &200);
+
+    env.ledger().with_mut(|l| l.timestamp = 1010); // 10 seconds pass: rewards = (200 * 10) / 100 = 20
+    
+    // Restaking should automatically trigger a claim of outstanding rewards
+    staking_client.stake(&user, &100);
+
+    // Verify rewards were automatically transferred
+    assert_eq!(reward_token_client.balance(&user), 20);
+
+    // Verify the total staking amount is updated
+    assert_eq!(staking_client.get_stake(&user), 300);
+
+    // Verify user's staking token balance was debited
+    assert_eq!(staking_token_client.balance(&user), 1000000 - 300);
+}
+
 
