@@ -47,3 +47,25 @@ fn test_transfer() {
     assert_eq!(client.balance(&user1), 700);
     assert_eq!(client.balance(&user2), 300);
 }
+
+#[test]
+#[should_panic(expected = "insufficient balance")]
+fn test_transfer_insufficient_balance() {
+    let env = Env::default();
+    env.mock_all_auths();
+    
+    let contract_id = env.register_contract(None, TokenContract);
+    let client = TokenContractClient::new(&env, &contract_id);
+
+    let admin = Address::generate(&env);
+    let user1 = Address::generate(&env);
+    let user2 = Address::generate(&env);
+    let name = String::from_str(&env, "Reward Token");
+    let symbol = String::from_str(&env, "RWT");
+
+    client.initialize(&admin, &name, &symbol);
+    client.mint(&user1, &100);
+
+    // Try to transfer 200 (greater than balance of 100)
+    client.transfer(&user1, &user2, &200);
+}
