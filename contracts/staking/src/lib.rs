@@ -90,6 +90,11 @@ impl StakingContract {
         }
     }
 
+    /// Calculates the pending staking rewards for a user based on elapsed time.
+    ///
+    /// The reward rate is set to 1% of the staked amount per second (1/100 scale).
+    /// Both amount and rewards are scaled in Stroops (10^7 scale).
+    /// Formula: `(staked_amount * seconds_elapsed) / 100`.
     pub fn calculate_rewards(env: Env, user: Address) -> i128 {
         if let Some(stake_info) = env.storage().persistent().get::<_, StakeInfo>(&DataKey::Stake(user)) {
             let current_time = env.ledger().timestamp();
