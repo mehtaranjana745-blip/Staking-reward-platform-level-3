@@ -12,13 +12,21 @@ const RPC_URL = 'https://soroban-testnet.stellar.org';
 
 StellarWalletsKit.init({ modules: defaultModules() });
 
+interface StakingEvent {
+  id: string;
+  type: string;
+  user: string;
+  amount: string;
+  time: string;
+}
+
 export default function App() {
   const [address, setAddress] = useState<string | null>(null);
   const [stakedAmount, setStakedAmount] = useState('0');
   const [pendingRewards, setPendingRewards] = useState('0');
   const [tokenBalance, setTokenBalance] = useState('0');
   const [stakeInput, setStakeInput] = useState('');
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<StakingEvent[]>([]);
   const [status, setStatus] = useState<{type: 'pending'|'success'|'error', msg: string, hash?: string} | null>(null);
 
   // Fetch real on-chain data from contracts
@@ -99,27 +107,27 @@ export default function App() {
         });
         
         if (response.events) {
-          const parsedEvents = response.events.map((e: any) => {
+          const parsedEvents: StakingEvent[] = response.events.map((e: any): StakingEvent => {
             let typeStr = "Unknown";
             let userStr = "Unknown";
             let amountVal = "0";
             
             try {
-              if (e.topic && e.topic[0]) {
-                typeStr = scValToNative(e.topic[0]);
+              if (Array.isArray(e.topic) && e.topic[0]) {
+                typeStr = String(scValToNative(e.topic[0]));
               }
-              if (e.topic && e.topic[1]) {
-                userStr = scValToNative(e.topic[1]).toString();
+              if (Array.isArray(e.topic) && e.topic[1]) {
+                userStr = String(scValToNative(e.topic[1]));
               }
               if (e.value) {
-                amountVal = scValToNative(e.value).toString();
+                amountVal = String(scValToNative(e.value));
               }
             } catch (err) {
               console.error("Error parsing event XDR:", err);
             }
             
             return {
-              id: e.id,
+              id: String(e.id),
               type: typeStr,
               user: userStr !== "Unknown" ? `${userStr.slice(0, 4)}...${userStr.slice(-4)}` : "Unknown", 
               amount: amountVal,
