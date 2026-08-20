@@ -144,4 +144,14 @@ fn test_restake_claims_existing_rewards() {
     assert_eq!(staking_token_client.balance(&user), 1000000 - 300);
 }
 
+#[test]
+#[should_panic(expected = "no active stake")]
+fn test_unstake_without_active_stake_panics() {
+    let env = Env::default();
+    let (user, _, _, _, staking_client) = setup(&env);
+    
+    // Attempting to unstake when there is no active stake should panic
+    staking_client.unstake(&user);
+}
+
 
