@@ -59,6 +59,49 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
+.wallet-header-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.address-badge-btn {
+  position: relative;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  background: rgba(74, 222, 128, 0.05);
+}
+
+.address-badge-btn:hover {
+  background: rgba(74, 222, 128, 0.15);
+}
+
+.copied-tooltip {
+  position: absolute;
+  top: -24px;
+  right: 50%;
+  transform: translateX(50%);
+  background: var(--primary);
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  animation: slideUp 0.15s ease-out;
+}
+
+.btn-icon-only {
+  padding: 0.75rem;
+  border-color: rgba(248, 113, 113, 0.3);
+  background: rgba(248, 113, 113, 0.05);
+}
+
+.btn-icon-only:hover {
+  background: rgba(248, 113, 113, 0.15);
+  border-color: #f87171;
+}
+
 .btn {
   background: transparent;
   color: var(--text-main);

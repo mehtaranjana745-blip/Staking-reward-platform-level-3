@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { rpc, Networks, Contract, TransactionBuilder, Address, nativeToScVal, scValToNative } from '@stellar/stellar-sdk';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { defaultModules } from '@creit.tech/stellar-wallets-kit/modules/utils';
-import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator } from 'lucide-react';
+import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut } from 'lucide-react';
 import { calculateProjectedYield } from './utils';
 import './index.css';
 
@@ -30,6 +30,7 @@ export default function App() {
   const [events, setEvents] = useState<StakingEvent[]>([]);
   const [status, setStatus] = useState<{type: 'pending'|'success'|'error', msg: string, hash?: string} | null>(null);
   const [showCalculator, setShowCalculator] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   // Fetch real on-chain data from contracts
   const fetchContractData = async (userAddress: string) => {
@@ -169,6 +170,13 @@ export default function App() {
     setPendingRewards('0');
     setTokenBalance('0');
     setStatus({type: 'success', msg: 'Disconnected successfully'});
+  };
+
+  const copyAddress = () => {
+    if (!address) return;
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   useEffect(() => {
@@ -319,15 +327,26 @@ export default function App() {
         </div>
         
         {address ? (
-          <button 
-            className="btn" 
-            style={{ border: '1px solid var(--primary)', color: 'var(--primary)', cursor: 'pointer' }}
-            onClick={disconnectWallet}
-            title="Click to disconnect wallet"
-          >
-            <ShieldCheck size={18} />
-            {address.slice(0, 4)}...{address.slice(-4)} (Disconnect)
-          </button>
+          <div className="wallet-header-group">
+            <button 
+              type="button"
+              className="btn address-badge-btn" 
+              onClick={copyAddress}
+              title="Click to copy full address"
+            >
+              {copied ? <Check size={16} color="var(--primary)" /> : <Copy size={16} color="var(--text-muted)" />}
+              <span>{address.slice(0, 4)}...{address.slice(-4)}</span>
+              {copied && <span className="copied-tooltip">Copied!</span>}
+            </button>
+            <button 
+              type="button"
+              className="btn btn-icon-only" 
+              onClick={disconnectWallet}
+              title="Disconnect Wallet"
+            >
+              <LogOut size={16} color="#f87171" />
+            </button>
+          </div>
         ) : (
           <button className="btn btn-primary" onClick={connectWallet}>
             Connect Wallet
