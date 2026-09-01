@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { rpc, Networks, Contract, TransactionBuilder, Address, nativeToScVal, scValToNative } from '@stellar/stellar-sdk';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { defaultModules } from '@creit.tech/stellar-wallets-kit/modules/utils';
-import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator } from 'lucide-react';
+import { calculateProjectedYield } from './utils';
 import './index.css';
 
 const STAKING_CONTRACT_ID = import.meta.env.VITE_STAKING_CONTRACT_ID || "CC7TQ56NU4YDBITTGPNIO6IPEGBEL2CABV2EC55Z3MLIY7QCXICRGGT2";
@@ -28,6 +29,7 @@ export default function App() {
   const [stakeInput, setStakeInput] = useState('');
   const [events, setEvents] = useState<StakingEvent[]>([]);
   const [status, setStatus] = useState<{type: 'pending'|'success'|'error', msg: string, hash?: string} | null>(null);
+  const [showCalculator, setShowCalculator] = useState(false);
 
   // Fetch real on-chain data from contracts
   const fetchContractData = async (userAddress: string) => {
@@ -402,6 +404,42 @@ export default function App() {
           >
             Unstake & Claim
           </button>
+
+          <button 
+            type="button"
+            className="btn" 
+            style={{ width: '100%', marginTop: '0.75rem', justifyContent: 'center', borderColor: 'var(--panel-border)', fontSize: '0.85rem' }}
+            onClick={() => setShowCalculator(!showCalculator)}
+          >
+            <Calculator size={16} color="var(--accent)" />
+            {showCalculator ? 'Hide APY Calculator' : 'View Estimated Yield & APY'}
+          </button>
+
+          {showCalculator && (
+            <div className="yield-calc-card">
+              <div className="yield-calc-header">
+                <span>Estimated Rewards Projection</span>
+                <span className="calc-basis">Basis: {Number(stakeInput) > 0 ? stakeInput : (Number(stakedAmount) > 0 ? stakedAmount : '10')} XLM</span>
+              </div>
+              <div className="yield-grid">
+                {[
+                  { label: '1 Day', days: 1 },
+                  { label: '7 Days', days: 7 },
+                  { label: '30 Days', days: 30 },
+                  { label: '1 Year', days: 365 },
+                ].map((item) => {
+                  const base = Number(stakeInput) > 0 ? Number(stakeInput) : (Number(stakedAmount) > 0 ? Number(stakedAmount) : 10);
+                  const projected = calculateProjectedYield(base, item.days);
+                  return (
+                    <div key={item.days} className="yield-item">
+                      <span className="yield-days">{item.label}</span>
+                      <span className="yield-val">+{projected.toLocaleString()} RWT</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="panel">

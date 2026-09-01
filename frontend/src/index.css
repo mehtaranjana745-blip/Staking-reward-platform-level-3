@@ -359,3 +359,58 @@ body {
     justify-content: space-between;
   }
 }
+
+/* Yield Calculator Styles */
+.yield-calc-card {
+  margin-top: 1rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 1rem;
+  animation: slideIn 0.25s ease-out;
+}
+
+.yield-calc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.calc-basis {
+  font-size: 0.75rem;
+  color: var(--accent);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.yield-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.yield-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.yield-days {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.yield-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+}

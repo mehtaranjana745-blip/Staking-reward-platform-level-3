@@ -49,3 +49,9 @@ export function calculatePresetAmount(balance: number, percentage: number): stri
   const amount = (balance * percentage) / 100;
   return amount > 0 ? amount.toFixed(2) : '0';
 }
+
+export function calculateProjectedYield(stakedAmount: number, days: number): number {
+  if (stakedAmount <= 0 || days <= 0) return 0;
+  // Based on demo rate of 0.01 RWT per second per XLM (864 RWT/day per XLM)
+  return Number((stakedAmount * days * 864).toFixed(2));
+}

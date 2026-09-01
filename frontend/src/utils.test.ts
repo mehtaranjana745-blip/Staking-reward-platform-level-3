@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { validateAmount, formatAddress, calculateMockRewards, isValidContractId, toStroops, fromStroops, parseTransactionError, calculatePresetAmount } from './utils';
+import { validateAmount, formatAddress, calculateMockRewards, isValidContractId, toStroops, fromStroops, parseTransactionError, calculatePresetAmount, calculateProjectedYield } from './utils';
 
 describe('Utility Functions Tests', () => {
   test('validateAmount validates positive numbers correctly', () => {
@@ -48,5 +48,12 @@ describe('Utility Functions Tests', () => {
     expect(calculatePresetAmount(200, 50)).toBe('100.00');
     expect(calculatePresetAmount(100, 100)).toBe('100.00');
     expect(calculatePresetAmount(0, 50)).toBe('0');
+  });
+
+  test('calculateProjectedYield calculates reward projections accurately', () => {
+    expect(calculateProjectedYield(1, 1)).toBe(864);
+    expect(calculateProjectedYield(10, 7)).toBe(60480);
+    expect(calculateProjectedYield(0, 30)).toBe(0);
+    expect(calculateProjectedYield(100, 0)).toBe(0);
   });
 });
