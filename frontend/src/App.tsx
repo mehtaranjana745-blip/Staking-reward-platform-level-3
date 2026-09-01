@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { rpc, Networks, Contract, TransactionBuilder, Address, nativeToScVal, scValToNative } from '@stellar/stellar-sdk';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { defaultModules } from '@creit.tech/stellar-wallets-kit/modules/utils';
-import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette } from 'lucide-react';
-import { calculateProjectedYield } from './utils';
+import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer } from 'lucide-react';
+import { calculateProjectedYield, formatDuration } from './utils';
 import './index.css';
 
 const STAKING_CONTRACT_ID = import.meta.env.VITE_STAKING_CONTRACT_ID || "CC7TQ56NU4YDBITTGPNIO6IPEGBEL2CABV2EC55Z3MLIY7QCXICRGGT2";
@@ -32,6 +32,7 @@ export default function App() {
   const [showCalculator, setShowCalculator] = useState(false);
   const [copied, setCopied] = useState(false);
   const [eventFilter, setEventFilter] = useState<'all' | 'staked' | 'unstaked' | 'claimed'>('all');
+  const [stakingDuration, setStakingDuration] = useState(0);
   const [theme, setTheme] = useState<'emerald' | 'sapphire' | 'amethyst'>(() => {
     return (localStorage.getItem('stellarstake_theme') as any) || 'emerald';
   });
@@ -197,6 +198,17 @@ export default function App() {
       return () => clearInterval(interval);
     }
   }, [address]);
+
+  useEffect(() => {
+    if (Number(stakedAmount) > 0) {
+      const timer = setInterval(() => {
+        setStakingDuration((prev) => prev + 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else {
+      setStakingDuration(0);
+    }
+  }, [stakedAmount]);
 
   const stake = async () => {
     if (!address) return setStatus({type: 'error', msg: 'Wallet not connected'});
@@ -383,10 +395,19 @@ export default function App() {
 
       <main className="grid">
         <div className="panel">
-          <h2 className="panel-header">
-            <Coins size={24} color="var(--accent)" />
-            Staking Dashboard
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h2 className="panel-header" style={{ marginBottom: 0 }}>
+              <Coins size={24} color="var(--accent)" />
+              Staking Dashboard
+            </h2>
+            {Number(stakedAmount) > 0 && (
+              <div className="active-staking-badge" title="Active Staking Session Duration">
+                <span className="pulse-dot" />
+                <Timer size={14} color="var(--primary)" />
+                <span>Active: {formatDuration(stakingDuration)}</span>
+              </div>
+            )}
+          </div>
           
           <div className="stat-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
             <div className="stat-card">
