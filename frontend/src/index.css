@@ -118,6 +118,19 @@ body {
   background: rgba(74, 222, 128, 0.15);
 }
 
+.btn-faucet {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-size: 0.8rem;
+  padding: 0.6rem 0.9rem;
+}
+
+.btn-faucet:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.25);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
 .copied-tooltip {
   position: absolute;
   top: -24px;

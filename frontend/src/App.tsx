@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { rpc, Networks, Contract, TransactionBuilder, Address, nativeToScVal, scValToNative } from '@stellar/stellar-sdk';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { defaultModules } from '@creit.tech/stellar-wallets-kit/modules/utils';
-import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer } from 'lucide-react';
+import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer, Droplets } from 'lucide-react';
 import { calculateProjectedYield, formatDuration } from './utils';
 import './index.css';
 
@@ -33,6 +33,7 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [eventFilter, setEventFilter] = useState<'all' | 'staked' | 'unstaked' | 'claimed'>('all');
   const [stakingDuration, setStakingDuration] = useState(0);
+  const [faucetLoading, setFaucetLoading] = useState(false);
   const [theme, setTheme] = useState<'emerald' | 'sapphire' | 'amethyst'>(() => {
     return (localStorage.getItem('stellarstake_theme') as any) || 'emerald';
   });
@@ -187,6 +188,25 @@ export default function App() {
     navigator.clipboard.writeText(address);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const requestFaucet = async () => {
+    if (!address) return setStatus({ type: 'error', msg: 'Connect wallet to request testnet XLM' });
+    setFaucetLoading(true);
+    setStatus({ type: 'pending', msg: 'Requesting 10,000 Testnet XLM from Friendbot...' });
+    try {
+      const res = await fetch(`https://friendbot.stellar.org?addr=${address}`);
+      if (res.ok) {
+        setStatus({ type: 'success', msg: 'Friendbot funded 10,000 XLM successfully!' });
+        setTimeout(() => fetchContractData(address), 2000);
+      } else {
+        throw new Error('Friendbot rate-limited or account already initialized');
+      }
+    } catch (e: any) {
+      setStatus({ type: 'error', msg: e.message || 'Friendbot request failed' });
+    } finally {
+      setFaucetLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -367,6 +387,16 @@ export default function App() {
         
         {address ? (
           <div className="wallet-header-group">
+            <button
+              type="button"
+              className="btn btn-faucet"
+              onClick={requestFaucet}
+              disabled={faucetLoading}
+              title="Request 10,000 Free Testnet XLM from Friendbot"
+            >
+              <Droplets size={16} color="var(--accent)" />
+              <span>{faucetLoading ? 'Funding...' : 'Faucet'}</span>
+            </button>
             <button 
               type="button"
               className="btn address-badge-btn" 
