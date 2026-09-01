@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { rpc, Networks, Contract, TransactionBuilder, Address, nativeToScVal, scValToNative } from '@stellar/stellar-sdk';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { defaultModules } from '@creit.tech/stellar-wallets-kit/modules/utils';
-import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut } from 'lucide-react';
+import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette } from 'lucide-react';
 import { calculateProjectedYield } from './utils';
 import './index.css';
 
@@ -31,6 +31,14 @@ export default function App() {
   const [status, setStatus] = useState<{type: 'pending'|'success'|'error', msg: string, hash?: string} | null>(null);
   const [showCalculator, setShowCalculator] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [theme, setTheme] = useState<'emerald' | 'sapphire' | 'amethyst'>(() => {
+    return (localStorage.getItem('stellarstake_theme') as any) || 'emerald';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('stellarstake_theme', theme);
+  }, [theme]);
 
   // Fetch real on-chain data from contracts
   const fetchContractData = async (userAddress: string) => {
@@ -324,6 +332,24 @@ export default function App() {
         <div className="logo-container">
           <Activity size={32} color="var(--primary)" />
           <span className="logo-text">StellarStake</span>
+          <div className="theme-selector" title="Switch Theme Glow">
+            <Palette size={14} color="var(--text-muted)" style={{ marginRight: '2px' }} />
+            <span
+              className={`theme-dot emerald ${theme === 'emerald' ? 'active' : ''}`}
+              onClick={() => setTheme('emerald')}
+              title="Emerald Glow"
+            />
+            <span
+              className={`theme-dot sapphire ${theme === 'sapphire' ? 'active' : ''}`}
+              onClick={() => setTheme('sapphire')}
+              title="Sapphire Glow"
+            />
+            <span
+              className={`theme-dot amethyst ${theme === 'amethyst' ? 'active' : ''}`}
+              onClick={() => setTheme('amethyst')}
+              title="Amethyst Glow"
+            />
+          </div>
         </div>
         
         {address ? (
