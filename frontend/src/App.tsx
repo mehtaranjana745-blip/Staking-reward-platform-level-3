@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { rpc, Networks, Contract, TransactionBuilder, Address, nativeToScVal, scValToNative } from '@stellar/stellar-sdk';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { defaultModules } from '@creit.tech/stellar-wallets-kit/modules/utils';
-import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer, Droplets } from 'lucide-react';
+import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer, Droplets, X } from 'lucide-react';
 import { calculateProjectedYield, formatDuration } from './utils';
 import './index.css';
 
@@ -229,6 +229,15 @@ export default function App() {
       setStakingDuration(0);
     }
   }, [stakedAmount]);
+
+  useEffect(() => {
+    if (status && status.type !== 'pending') {
+      const timer = setTimeout(() => {
+        setStatus(null);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   const stake = async () => {
     if (!address) return setStatus({type: 'error', msg: 'Wallet not connected'});
@@ -588,7 +597,7 @@ export default function App() {
           {status.type === 'error' && <AlertCircle size={20} color="#f87171" />}
           {status.type === 'success' && <ShieldCheck size={20} color="var(--primary)" />}
           {status.type === 'pending' && <Clock size={20} color="#fbbf24" />}
-          <div>
+          <div style={{ flex: 1 }}>
             <div>{status.msg}</div>
             {status.hash && (
               <a 
@@ -601,6 +610,15 @@ export default function App() {
               </a>
             )}
           </div>
+          <button 
+            type="button" 
+            className="toast-close-btn" 
+            onClick={() => setStatus(null)}
+            title="Dismiss notification"
+          >
+            <X size={16} />
+          </button>
+          {status.type !== 'pending' && <div className="toast-progress-bar" />}
         </div>
       )}
     </div>

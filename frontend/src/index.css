@@ -402,10 +402,49 @@ body {
   animation: slideUp 0.3s ease-out;
   z-index: 50;
   box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  overflow: hidden;
+  position: fixed;
+}
+
+.toast-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.toast-close-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.toast-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: var(--primary);
+  width: 100%;
+  animation: toastCountdown 6s linear forwards;
+}
+
+@keyframes toastCountdown {
+  from { width: 100%; }
+  to { width: 0%; }
 }
 
 .status-toast.error {
   border-left: 4px solid var(--error);
+}
+
+.status-toast.error .toast-progress-bar {
+  background: var(--error);
 }
 
 .status-toast.success {
