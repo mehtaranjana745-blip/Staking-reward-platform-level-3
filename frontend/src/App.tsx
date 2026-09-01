@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { rpc, Networks, Contract, TransactionBuilder, Address, nativeToScVal, scValToNative } from '@stellar/stellar-sdk';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { defaultModules } from '@creit.tech/stellar-wallets-kit/modules/utils';
-import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer, Droplets, X, Wifi, WifiOff } from 'lucide-react';
+import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer, Droplets, X, Wifi, WifiOff, Info, ExternalLink } from 'lucide-react';
 import { calculateProjectedYield, formatDuration } from './utils';
 import './index.css';
 
@@ -36,6 +36,7 @@ export default function App() {
   const [faucetLoading, setFaucetLoading] = useState(false);
   const [rpcLatency, setRpcLatency] = useState<number | null>(null);
   const [rpcStatus, setRpcStatus] = useState<'online' | 'error'>('online');
+  const [showContractInfo, setShowContractInfo] = useState(false);
   const [theme, setTheme] = useState<'emerald' | 'sapphire' | 'amethyst'>(() => {
     return (localStorage.getItem('stellarstake_theme') as any) || 'emerald';
   });
@@ -616,6 +617,56 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      <footer className="contract-info-panel">
+        <div 
+          className="contract-info-header" 
+          onClick={() => setShowContractInfo(!showContractInfo)}
+          style={{ cursor: 'pointer' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Info size={18} color="var(--accent)" />
+            <span style={{ fontWeight: 600 }}>Verified Soroban Contracts & Protocol Architecture</span>
+          </div>
+          <button type="button" className="btn" style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem' }}>
+            {showContractInfo ? 'Hide Details' : 'Show Details'}
+          </button>
+        </div>
+
+        {showContractInfo && (
+          <div className="contract-card-list">
+            <div className="contract-card-item">
+              <div className="contract-card-label">Staking Contract (Rust / Soroban)</div>
+              <div className="contract-card-body">
+                <code className="contract-id-code">{STAKING_CONTRACT_ID}</code>
+                <a 
+                  href={`https://stellar.expert/explorer/testnet/contract/${STAKING_CONTRACT_ID}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contract-link-btn"
+                >
+                  <ExternalLink size={14} /> Explorer
+                </a>
+              </div>
+            </div>
+
+            <div className="contract-card-item">
+              <div className="contract-card-label">Reward Token Contract (RWT)</div>
+              <div className="contract-card-body">
+                <code className="contract-id-code">{TOKEN_CONTRACT_ID}</code>
+                <a 
+                  href={`https://stellar.expert/explorer/testnet/contract/${TOKEN_CONTRACT_ID}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contract-link-btn"
+                >
+                  <ExternalLink size={14} /> Explorer
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+      </footer>
 
       {status && (
         <div className={`status-toast ${status.type}`}>

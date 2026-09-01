@@ -643,3 +643,84 @@ body {
     box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
   }
 }
+
+/* Contract Info Panel Styles */
+.contract-info-panel {
+  margin-top: 3rem;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  backdrop-filter: blur(10px);
+}
+
+.contract-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contract-card-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--panel-border);
+  animation: slideIn 0.25s ease-out;
+}
+
+.contract-card-item {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.contract-card-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.contract-card-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contract-id-code {
+  font-family: monospace;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  color: var(--primary);
+  word-break: break-all;
+}
+
+.contract-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--accent);
+  text-decoration: none;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.contract-link-btn:hover {
+  background: rgba(59, 130, 246, 0.25);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .contract-card-list {
+    grid-template-columns: 1fr;
+  }
+}

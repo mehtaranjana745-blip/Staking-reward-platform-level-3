@@ -11,12 +11,17 @@ This platform allows users to stake assets and earn rewards over time. The backe
 - **Multi-wallet connection**: Support for Freighter, Albedo, and other wallets via `@creit.tech/stellar-wallets-kit`.
 - **Stake / Unstake / Claim**: Core staking functionality with real-time on-chain transaction submission.
 - **Inter-contract communication**: The staking contract autonomously mints rewards via the token contract.
-- **Real-time Event Streaming**: Live activity feed parsing `Staked`, `Unstaked`, and `Claimed` events directly from the Soroban RPC.
-- **Transaction Status Tracking**: Real-time toast notifications displaying pending/success/error states with links to `stellar.expert`.
-- **Error Handling**: Graceful error handling for:
-  - Wallet connection rejection
-  - Invalid stake amounts (<= 0 or non-numeric)
-  - Insufficient balance / Network transaction failures
+- **Quick Percentage Stake Presets**: One-click 25%, 50%, 75%, and Max stake selection.
+- **Interactive Staking Yield & APY Calculator**: Real-time 1D, 7D, 30D, and 365D rewards projection.
+- **One-Click Copy Address**: Wallet address badge with clipboard copy and visual tooltip feedback.
+- **Multi-Palette Theme Switcher**: Theme customizer with Emerald Neon, Sapphire Cyan, and Amethyst Purple presets.
+- **Live Activity Feed Filtering**: Dynamic filter tabs for All, Staked, Unstaked, and Claimed events.
+- **Live Staking Duration & Session Timer**: Real-time counter and pulsing indicator showing active staking session time.
+- **Testnet Friendbot Faucet**: One-click onboarding to fund 10,000 testnet XLM directly.
+- **Auto-Dismiss Notification Toasts**: Enhanced alert toasts with countdown progress bars and dismiss triggers.
+- **Soroban RPC Connection & Latency Monitor**: Real-time network health and response latency ping.
+- **Verified Smart Contracts & Protocol Info Drawer**: Collapsible contract inspector with direct StellarExpert links.
+- **Error Handling**: Graceful error handling for wallet rejection, invalid amounts, and network failures.
 - **Mobile Responsive UI**: A premium, animated interface built with Vanilla CSS and responsive grid layouts.
 
 ## Tech Stack
