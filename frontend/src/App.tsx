@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { rpc, Networks, Contract, TransactionBuilder, Address, nativeToScVal, scValToNative } from '@stellar/stellar-sdk';
 import { StellarWalletsKit } from '@creit.tech/stellar-wallets-kit';
 import { defaultModules } from '@creit.tech/stellar-wallets-kit/modules/utils';
-import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer, Droplets, X } from 'lucide-react';
+import { Activity, Coins, Clock, ArrowRight, ShieldCheck, AlertCircle, Calculator, Check, Copy, LogOut, Palette, Timer, Droplets, X, Wifi, WifiOff } from 'lucide-react';
 import { calculateProjectedYield, formatDuration } from './utils';
 import './index.css';
 
@@ -34,6 +34,8 @@ export default function App() {
   const [eventFilter, setEventFilter] = useState<'all' | 'staked' | 'unstaked' | 'claimed'>('all');
   const [stakingDuration, setStakingDuration] = useState(0);
   const [faucetLoading, setFaucetLoading] = useState(false);
+  const [rpcLatency, setRpcLatency] = useState<number | null>(null);
+  const [rpcStatus, setRpcStatus] = useState<'online' | 'error'>('online');
   const [theme, setTheme] = useState<'emerald' | 'sapphire' | 'amethyst'>(() => {
     return (localStorage.getItem('stellarstake_theme') as any) || 'emerald';
   });
@@ -160,6 +162,25 @@ export default function App() {
       const interval = setInterval(fetchEvents, 10000); // every 10s
       return () => clearInterval(interval);
     }
+  }, []);
+
+  // Monitor Soroban RPC Connection & Latency
+  useEffect(() => {
+    const pingRpc = async () => {
+      const start = Date.now();
+      try {
+        const server = new rpc.Server(RPC_URL);
+        await server.getLatestLedger();
+        setRpcLatency(Date.now() - start);
+        setRpcStatus('online');
+      } catch (err) {
+        setRpcStatus('error');
+        setRpcLatency(null);
+      }
+    };
+    pingRpc();
+    const interval = setInterval(pingRpc, 20000);
+    return () => clearInterval(interval);
   }, []);
 
 
@@ -391,6 +412,10 @@ export default function App() {
               onClick={() => setTheme('amethyst')}
               title="Amethyst Glow"
             />
+          </div>
+          <div className={`network-status-pill ${rpcStatus}`} title={`Soroban RPC URL: ${RPC_URL}`}>
+            {rpcStatus === 'online' ? <Wifi size={12} color="var(--primary)" /> : <WifiOff size={12} color="var(--error)" />}
+            <span>Testnet {rpcLatency ? `(${rpcLatency}ms)` : ''}</span>
           </div>
         </div>
         
