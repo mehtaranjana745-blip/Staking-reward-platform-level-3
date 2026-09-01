@@ -31,6 +31,7 @@ export default function App() {
   const [status, setStatus] = useState<{type: 'pending'|'success'|'error', msg: string, hash?: string} | null>(null);
   const [showCalculator, setShowCalculator] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [eventFilter, setEventFilter] = useState<'all' | 'staked' | 'unstaked' | 'claimed'>('all');
   const [theme, setTheme] = useState<'emerald' | 'sapphire' | 'amethyst'>(() => {
     return (localStorage.getItem('stellarstake_theme') as any) || 'emerald';
   });
@@ -488,25 +489,43 @@ export default function App() {
         </div>
 
         <div className="panel">
-          <h2 className="panel-header">
-            <Clock size={24} color="var(--primary)" />
-            Live Activity
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <h2 className="panel-header" style={{ marginBottom: 0 }}>
+              <Clock size={24} color="var(--primary)" />
+              Live Activity
+            </h2>
+            <div className="event-filter-bar">
+              {(['all', 'staked', 'unstaked', 'claimed'] as const).map((filter) => (
+                <button
+                  key={filter}
+                  type="button"
+                  className={`event-filter-btn ${eventFilter === filter ? 'active' : ''}`}
+                  onClick={() => setEventFilter(filter)}
+                >
+                  {filter === 'all' ? 'All' : filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
           
           <div className="event-list">
-            {events.length > 0 ? events.map((ev, i) => (
-              <div key={i} className={`event-item ${ev.type.toLowerCase()}`}>
-                <div className="event-icon">
-                  {ev.type === 'Staked' ? <ArrowRight size={16} color="var(--primary)" /> : <Activity size={16} />}
-                </div>
-                <div className="event-content">
-                  <p><strong>{ev.user}</strong> {ev.type.toLowerCase()} {ev.amount} tokens</p>
-                  <div className="event-time">{ev.time}</div>
-                </div>
-              </div>
-            )) : (
+            {events.filter((ev) => eventFilter === 'all' || ev.type.toLowerCase() === eventFilter).length > 0 ? (
+              events
+                .filter((ev) => eventFilter === 'all' || ev.type.toLowerCase() === eventFilter)
+                .map((ev, i) => (
+                  <div key={i} className={`event-item ${ev.type.toLowerCase()}`}>
+                    <div className="event-icon">
+                      {ev.type === 'Staked' ? <ArrowRight size={16} color="var(--primary)" /> : <Activity size={16} />}
+                    </div>
+                    <div className="event-content">
+                      <p><strong>{ev.user}</strong> {ev.type.toLowerCase()} {ev.amount} tokens</p>
+                      <div className="event-time">{ev.time}</div>
+                    </div>
+                  </div>
+                ))
+            ) : (
               <p style={{ color: 'var(--text-muted)', textAlign: 'center', marginTop: '2rem' }}>
-                Waiting for network events...
+                {events.length === 0 ? 'Waiting for network events...' : `No ${eventFilter} events recorded yet.`}
               </p>
             )}
           </div>

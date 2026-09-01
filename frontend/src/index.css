@@ -499,3 +499,35 @@ body {
   font-weight: 700;
   color: var(--primary);
 }
+
+/* Event Filter Bar Styles */
+.event-filter-bar {
+  display: flex;
+  gap: 0.35rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--panel-border);
+  padding: 0.2rem;
+  border-radius: 8px;
+}
+
+.event-filter-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.event-filter-btn:hover {
+  color: var(--text-main);
+}
+
+.event-filter-btn.active {
+  background: var(--primary);
+  color: #000;
+  box-shadow: 0 0 10px var(--primary-glow);
+}
