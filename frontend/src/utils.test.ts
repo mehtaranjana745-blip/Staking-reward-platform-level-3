@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { validateAmount, formatAddress, calculateMockRewards, isValidContractId, toStroops, fromStroops, parseTransactionError } from './utils';
+import { validateAmount, formatAddress, calculateMockRewards, isValidContractId, toStroops, fromStroops, parseTransactionError, calculatePresetAmount } from './utils';
 
 describe('Utility Functions Tests', () => {
   test('validateAmount validates positive numbers correctly', () => {
@@ -41,5 +41,12 @@ describe('Utility Functions Tests', () => {
     expect(parseTransactionError({ message: 'insufficient funds or balance' })).toBe('Insufficient balance for this transaction');
     expect(parseTransactionError(new Error('timeout occurred'))).toBe('Network transaction timed out. Please try again.');
     expect(parseTransactionError('some random error')).toBe('some random error');
+  });
+
+  test('calculatePresetAmount calculates proportional staking amounts', () => {
+    expect(calculatePresetAmount(100, 25)).toBe('25.00');
+    expect(calculatePresetAmount(200, 50)).toBe('100.00');
+    expect(calculatePresetAmount(100, 100)).toBe('100.00');
+    expect(calculatePresetAmount(0, 50)).toBe('0');
   });
 });

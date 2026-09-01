@@ -43,3 +43,9 @@ export function parseTransactionError(err: any): string {
   }
   return msg || 'Transaction failed';
 }
+
+export function calculatePresetAmount(balance: number, percentage: number): string {
+  if (balance <= 0 || percentage <= 0) return '0';
+  const amount = (balance * percentage) / 100;
+  return amount > 0 ? amount.toFixed(2) : '0';
+}

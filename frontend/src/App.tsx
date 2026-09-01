@@ -360,7 +360,21 @@ export default function App() {
           </div>
 
           <div className="input-group">
-            <label>Amount to Stake</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label>Amount to Stake</label>
+              <div className="preset-container">
+                {[25, 50, 75, 100].map((pct) => (
+                  <button
+                    key={pct}
+                    type="button"
+                    className="preset-btn"
+                    onClick={() => setStakeInput(pct === 100 ? '100' : pct.toString())}
+                  >
+                    {pct === 100 ? 'MAX' : `${pct}%`}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="input-wrapper">
               <input 
                 type="number" 
